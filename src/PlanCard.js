@@ -5,7 +5,10 @@ import "@fontsource/saira";
 import "@fontsource/saira-stencil-one";
 
 
+
 export default function PlanCard({ p }) {
+
+    const {id} = useParams();
     const [mouseHover, setMouseHover] = useState(false)
 
     return (
@@ -25,7 +28,8 @@ export default function PlanCard({ p }) {
             <div style={{
                 display: 'flex',
                 flexDirection:'row',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
+                gap:'6px',
                 width: '300px',
                 height: '200px',
                 position: 'absolute',
@@ -34,7 +38,10 @@ export default function PlanCard({ p }) {
             }}>
 
                 <button style={{marginLeft:'8px', width: '15%', height: ' 15%', backgroundColor:'rgba(140, 23, 194, 0.69)' }}><WhatsAppIcon style={{ color: 'white' }} /></button>
-                <button style={{ width: '50%', height: ' 15%', color: 'white', backgroundColor: 'rgba(140, 23, 194, 0.83)' }}>Assinar</button>
+                <a  href={"/Config/" + p.id} style={{ width: '100%', height: ' 100%'}}>
+                    <button  style={{ width: '50%', height: ' 15%', color: 'white', backgroundColor: 'rgba(140, 23, 194, 0.83)' }}>Assinar</button>
+                </a>
+                
 
 
             </div>

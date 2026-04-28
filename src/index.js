@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Tela from './Tela';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router';
 import PlanCard from './PlanCard';
 import Config from './views/Config';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +15,7 @@ root.render(
     <React.StrictMode>
       <Routes>
         <Route path="/" element={<Tela/>}/>
-        <Route path="/config" element={<Config/>}/>
+        <Route path="/config/:id" element={<Config/>}/>
       </Routes>
     </React.StrictMode>
   </BrowserRouter>

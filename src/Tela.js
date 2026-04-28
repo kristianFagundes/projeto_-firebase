@@ -16,7 +16,9 @@ export default function Tela() {
     const descricao3 = 'Acesso à todas as Unidades';
     const descricao4 = 'Pagamento anual parcelado em até 12x no cartão';
 
-    const [planos, setPlanos] = useState([
+    const [planos, setPlanos] = useState([])
+
+    const planosTemp = [
         {
             img: 'https://s2-oglobo.glbimg.com/tCi4YPIy6K0HBPMLGnt00WSvbrQ=/0x0:4000x2667/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2023/c/a/O7y1EGRAelLLVURwHeqQ/strong-man-training-gym.jpg',
             id: 1,
@@ -43,14 +45,19 @@ export default function Tela() {
             valorAtual: 245,
             descricao: [descricao1, descricao2, descricao3, descricao4]
         },
-    ])
+    ];
 
     useEffect(() => {
 
         async function fetchData() {
             const q = query(collection(db, "itens"))
             const qSnap = await getDocs(q)
-            console.log(qSnap.docs[0].data())
+            let listaTemporaria = []
+            qSnap.docs.map(doc => listaTemporaria.push({...doc.data(), descricao: [descricao1, descricao2, descricao3,descricao4]}))
+            
+            setPlanos(listaTemporaria)
+            
+            console.log(listaTemporaria)
         }
 
         fetchData()
@@ -124,6 +131,7 @@ export default function Tela() {
 
             </header>
             <main style={{
+                
                 backgroundColor: ' rgb(183, 160, 194)',
                 backgroundSize: 'cover',
                 width: '100%',
@@ -148,10 +156,7 @@ export default function Tela() {
 
                 >
                     {
-                        planos.map((p) => {
-                            console.log("plano: ", p)
-
-                            return (
+                        planos.map((p) => {return (
                                 <PlanCard p={p} />
                             )
                         }
