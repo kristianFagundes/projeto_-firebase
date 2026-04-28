@@ -6,10 +6,14 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import "@fontsource/saira-stencil-one";
+import { BrowserRouter, Route, Routes, useParams } from 'react-router';
 
 
 
 export default function Config() {
+
+    const { id } = useParams();
+
 
     const [nome, setNome] = useState("");
     const [valorOriginal, setValorOriginal] = useState("");
@@ -29,16 +33,17 @@ export default function Config() {
             flexDirection: 'column',
             gap: '7px',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            fontFamily: "Saira Stencil One",
 
 
         }}>
             <h1 style={{
+                width: '30%',
                 fontSize: '2.4em',
-                letterSpacing:'5px',
+                letterSpacing: '0.5em',
                 color: 'white',
-                paddingRight: '380px',
-
+                paddingRight: '200px',
                 fontFamily: "Saira Stencil One",
 
 
