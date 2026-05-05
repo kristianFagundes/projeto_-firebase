@@ -3,12 +3,12 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import "@fontsource/saira";
 import "@fontsource/saira-stencil-one";
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 
 
 export default function PlanCard({ p }) {
 
-    const {id} = useParams();
     const [mouseHover, setMouseHover] = useState(false)
 
     return (
@@ -37,10 +37,10 @@ export default function PlanCard({ p }) {
                 opacity: mouseHover ? 1 : 0, transition: ' all 0.3s ease', pointerEvents: mouseHover ? "auto" : "none",
             }}>
 
-                <button style={{marginLeft:'8px', width: '15%', height: ' 15%', backgroundColor:'rgba(140, 23, 194, 0.69)' }}><WhatsAppIcon style={{ color: 'white' }} /></button>
-                <a  href={"/Config/" + p.id} style={{ width: '100%', height: ' 100%'}}>
+                <a  href={"/Config/" + p.id} style={{ width: '100%', height: ' 100%'}}><button style={{marginLeft:'8px', width: '30%', height: ' 15%', backgroundColor:'rgba(140, 23, 194, 0.69)' }}><EditRoundedIcon style={{ color: 'white' }} /></button></a>
+                
                     <button  style={{ width: '50%', height: ' 15%', color: 'white', backgroundColor: 'rgba(140, 23, 194, 0.83)' }}>Assinar</button>
-                </a>
+                
                 
 
 
