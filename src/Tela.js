@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react"
 import React from 'react';
 import { doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs } from 'firebase/firestore';
@@ -53,7 +54,7 @@ export default function Tela() {
             const q = query(collection(db, "itens"))
             const qSnap = await getDocs(q)
             let listaTemporaria = []
-            qSnap.docs.map(doc => listaTemporaria.push({...doc.data(), descricao: [descricao1, descricao2, descricao3,descricao4]}))
+            qSnap.docs.map(doc => listaTemporaria.push(doc.data()))
             
             setPlanos(listaTemporaria)
             

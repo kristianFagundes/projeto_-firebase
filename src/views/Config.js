@@ -21,7 +21,7 @@ export default function Config() {
     const [nome, setNome] = useState("");
     const [valorOriginal, setValorOriginal] = useState("");
     const [valorAtual, setValorAtual] = useState("");
-    const [descricao, setDescricao] = useState("");
+    const [descricoes, setDescricoes] = useState([]);
     const [imagem, setImagem] = useState("");
 
     useEffect(() => {
@@ -32,18 +32,18 @@ export default function Config() {
             const docSnap = await getDoc(docRef);
             console.log(docSnap.data())
             setNome(docSnap.data().nome)
-            setValorOriginal(docSnap.data().valorOriginal)
-            setValorAtual(docSnap.data().valorAtual)
-            setDescricao(docSnap.data().descricao)
+            setValorOriginal(`${docSnap.data().valorOriginal}`)
+            setValorAtual(`${docSnap.data().valorAtual}`)
+            setDescricoes(docSnap.data().descricoes)
             setImagem(docSnap.data().imagem)
 
         }
-         
 
-            fetchDoc()
-       
 
-        
+        fetchDoc()
+
+
+
     }, [])
 
 
@@ -62,8 +62,9 @@ export default function Config() {
             fontFamily: "Saira Stencil One",
 
 
+
         }}>
-            <a href={"/"}> <Button sx={{ color: 'white' }}>Voltar e Salvar</Button> </a>
+          
             <h1 style={{
                 width: '30%',
                 fontSize: '2.4em',
@@ -71,6 +72,8 @@ export default function Config() {
                 color: 'white',
                 paddingRight: '200px',
                 fontFamily: "Saira Stencil One",
+                textShadow: '3px 3px 7px rgb(54, 54, 54)',
+
 
 
             }}>Configurações</h1>
@@ -85,7 +88,7 @@ export default function Config() {
 
             }}>
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Nome" variant="filled" value={nome} onChange={(e) => { setNome(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><EditRoundedIcon /></Button>
+                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
                 <Button sx={{ color: 'white' }} ><AddCircleIcon /></Button>
             </div>
             <div style={{
@@ -98,7 +101,7 @@ export default function Config() {
 
             }} >
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Valor Original" variant="filled" value={valorOriginal} onChange={(e) => { setValorOriginal(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><EditRoundedIcon /></Button>
+                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
                 <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
             </div>
 
@@ -111,20 +114,38 @@ export default function Config() {
                 justifyContent: 'center'
             }}>
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Valor Atual" variant="filled" value={valorAtual} onChange={(e) => { setValorAtual(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><EditRoundedIcon /></Button>
+                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
                 <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
             </div>
             <div style={{
                 width: '100%',
                 display: 'flex',
-                flexDirection: 'row',
-                gap: '3px',
+                flexDirection: 'column',
+                gap: '9px',
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
-                <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Descrição" variant="filled" value={descricao} onChange={(e) => { setDescricao(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><EditRoundedIcon /></Button>
-                <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
+                {
+                    descricoes.map((descricao, i) => (
+                        <div style={{
+                            width: "100%",
+                            gap: '5px',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            display: 'flex',
+                            padding: '0',
+                        }}>
+                            <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Descrição" variant="filled" value={descricao} onChange={(e) => {
+                                let listaTemp = descricoes;
+                                listaTemp[i] = e.target.value;
+                                setDescricoes([...listaTemp]);
+                            }} />
+                            <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
+                            <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
+                        </div>
+                    ))
+                }
+
             </div>
             <div style={{
                 width: '100%',
@@ -135,9 +156,33 @@ export default function Config() {
                 justifyContent: 'center'
             }}>
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Imagem" variant="filled" value={imagem} onChange={(e) => { setImagem(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><EditRoundedIcon /></Button>
+                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
                 <Button sx={{ color: 'white' }}><AddAPhotoIcon /></Button>
             </div>
+              <a href={"/"} style={{
+
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+                textDecoration: 'none',
+                marginRight:'130px'
+
+            }}> <Button sx={{
+
+
+                color: 'rgb(140, 23, 194)',
+                backgroundColor: ' rgb(219, 152, 241)',
+                boxShadow: '3px 3px 7px rgb(54, 54, 54)',
+                borderRadius: '30% 10%',
+                textShadow:'3px 1px 7px rgb(255, 255, 255)',
+                width: '6em',
+                height: '4em',
+                fontSize: '1em',
+                textTransform: 'uppercase',
+                fontFamily: "Saira Stencil One",
+
+
+            }}>Voltar e Salvar</Button> </a>
         </div>
     )
 
