@@ -14,8 +14,11 @@ root.render(
   <BrowserRouter>
     <React.StrictMode>
       <Routes>
+      
         <Route path="/" element={<Tela/>}/>
-        <Route path="/config/:id" element={<Config/>}/>
+        <Route path="/insert" element={<Config isEditting={false}/>}/>
+        <Route path="/config/:id" element={<Config isEditting={true}/>}/>
+        
       </Routes>
     </React.StrictMode>
   </BrowserRouter>

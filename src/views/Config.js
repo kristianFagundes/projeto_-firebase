@@ -8,12 +8,13 @@ import "@fontsource/saira-stencil-one";
 import { BrowserRouter, Route, Routes, useParams } from 'react-router';
 import { useState, useEffect } from "react"
 import React from 'react';
-import { doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs, docRef, getDoc } from 'firebase/firestore';
+import { updateDoc, doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs, docRef, getDoc, setDoc} from 'firebase/firestore';
 import { db } from '../firebase';
 
 
 
-export default function Config() {
+
+export default function Config({ isEditting }) {
 
     const { id } = useParams();
 
@@ -24,8 +25,9 @@ export default function Config() {
     const [descricoes, setDescricoes] = useState([]);
     const [imagem, setImagem] = useState("");
 
-    useEffect(() => {
 
+    useEffect(() => {
+        //  função assincrona não espera carregar para o codigo cotinuar a ser executado
         const fetchDoc = async () => {
 
             const docRef = doc(db, "itens", id)
@@ -35,16 +37,49 @@ export default function Config() {
             setValorOriginal(`${docSnap.data().valorOriginal}`)
             setValorAtual(`${docSnap.data().valorAtual}`)
             setDescricoes(docSnap.data().descricoes)
-            setImagem(docSnap.data().imagem)
+            setImagem(docSnap.data().imagem ?? "")
 
         }
 
+        if (isEditting) {
+            fetchDoc()
+        }
 
-        fetchDoc()
 
 
 
     }, [])
+
+
+    const saveData = () => {
+        // tivemos que criar uma variavel e jogar o ID dentro por que ele era uma constante e não poderia ser alterado
+        let newId = id
+        //  '!' exclamação = 'Se não' 
+        if (!isEditting) {
+            newId = Date.now()
+        }
+        // busca as informações no banco de dados e joga na constante
+        const refDoc = doc(db, "itens", `${newId}`);
+        // atualiza as informações 
+        const updateDocData = {
+            nome: nome,
+            valorOriginal: Number(valorOriginal),
+            valorAtual: Number(valorAtual),
+            descricoes: descricoes,
+            imagem: imagem,
+        }
+        if(isEditting){
+        updateDoc(refDoc, updateDocData)
+        }
+        else{
+            setDoc(refDoc, updateDocData)
+
+        }
+    }
+
+
+
+
 
 
     return (
@@ -64,7 +99,7 @@ export default function Config() {
 
 
         }}>
-          
+
             <h1 style={{
                 width: '30%',
                 fontSize: '2.4em',
@@ -159,30 +194,56 @@ export default function Config() {
                 <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
                 <Button sx={{ color: 'white' }}><AddAPhotoIcon /></Button>
             </div>
-              <a href={"/"} style={{
-
+            <div style={{
                 display: 'flex',
-                justifyContent: 'center',
-                width: '100%',
-                textDecoration: 'none',
-                marginRight:'130px'
+            }}>
+                <a href={"/"} style={{
 
-            }}> <Button sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: '100%',
+                    textDecoration: 'none',
+                    marginRight: '130px'
 
-
-                color: 'rgb(140, 23, 194)',
-                backgroundColor: ' rgb(219, 152, 241)',
-                boxShadow: '3px 3px 7px rgb(54, 54, 54)',
-                borderRadius: '30% 10%',
-                textShadow:'3px 1px 7px rgb(255, 255, 255)',
-                width: '6em',
-                height: '4em',
-                fontSize: '1em',
-                textTransform: 'uppercase',
-                fontFamily: "Saira Stencil One",
+                }}> <Button sx={{
 
 
-            }}>Voltar e Salvar</Button> </a>
+                    color: 'rgb(140, 23, 194)',
+                    backgroundColor: ' rgb(219, 152, 241)',
+                    boxShadow: '3px 3px 7px rgb(54, 54, 54)',
+                    borderRadius: '30% 10%',
+                    width: '6em',
+                    height: '4em',
+                    fontSize: '1em',
+                    textTransform: 'uppercase',
+                    fontFamily: "Saira Stencil One",
+
+
+                }}>Voltar</Button> </a>
+                <a style={{
+
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: '100%',
+                    textDecoration: 'none',
+                    marginRight: '130px'
+
+                }}> <Button onClick={saveData} sx={{
+
+
+                    color: 'rgb(140, 23, 194)',
+                    backgroundColor: ' rgb(219, 152, 241)',
+                    boxShadow: '3px 3px 7px rgb(54, 54, 54)',
+                    borderRadius: '30% 10%',
+                    width: '6em',
+                    height: '4em',
+                    fontSize: '1em',
+                    textTransform: 'uppercase',
+                    fontFamily: "Saira Stencil One",
+
+
+                }}>Salvar</Button> </a>
+            </div>
         </div>
     )
 
