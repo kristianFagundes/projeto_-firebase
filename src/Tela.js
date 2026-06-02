@@ -4,6 +4,7 @@ import React from 'react';
 import { doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import PlanCard from "./PlanCard";
+import Button from "@mui/material/Button";
 
 
 
@@ -48,21 +49,25 @@ export default function Tela() {
         },
     ];
 
-    useEffect(() => {
-
-        async function fetchData() {
+ async function fetchData() {
             const q = query(collection(db, "itens"))
             const qSnap = await getDocs(q)
             let listaTemporaria = []
-            qSnap.docs.map(doc => listaTemporaria.push(doc.data()))
+            qSnap.docs.map(doc => listaTemporaria.push({...doc.data(), "id": doc.id}))
             
             setPlanos(listaTemporaria)
             
             console.log(listaTemporaria)
         }
 
+
+    useEffect(() => {
         fetchData()
     }, []);
+
+    const onRemove = () => {
+        fetchData();
+    }
 
     return (
 
@@ -141,7 +146,28 @@ export default function Tela() {
 
 
             }}>
+<a href={"/insert"} style={{
 
+                    display: 'flex',
+                    justifyContent: 'center',
+                    width: '7%',
+                    textDecoration: 'none',
+                    paddingLeft: '13rem'
+                }}> <Button sx={{
+
+
+                    color: 'rgb(140, 23, 194)',
+                    backgroundColor: ' rgb(219, 152, 241)',
+                    boxShadow: '3px 3px 7px rgb(54, 54, 54)',
+                    borderRadius: '30% 10%',
+                    width: '6em',
+                    height: '4em',
+                    fontSize: '1em',
+                    textTransform: 'uppercase',
+                    fontFamily: "Saira Stencil One",
+
+
+                }}>Adicionar</Button> </a>
                 <div style={{
 
 
@@ -158,7 +184,7 @@ export default function Tela() {
                 >
                     {
                         planos.map((p) => {return (
-                                <PlanCard p={p} />
+                                <PlanCard p={p} onRemove={onRemove} />
                             )
                         }
 

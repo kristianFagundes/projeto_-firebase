@@ -8,7 +8,7 @@ import "@fontsource/saira-stencil-one";
 import { BrowserRouter, Route, Routes, useParams } from 'react-router';
 import { useState, useEffect } from "react"
 import React from 'react';
-import { updateDoc, doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs, docRef, getDoc, setDoc} from 'firebase/firestore';
+import { updateDoc, doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs, docRef, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 
@@ -37,7 +37,7 @@ export default function Config({ isEditting }) {
             setValorOriginal(`${docSnap.data().valorOriginal}`)
             setValorAtual(`${docSnap.data().valorAtual}`)
             setDescricoes(docSnap.data().descricoes)
-            setImagem(docSnap.data().imagem ?? "")
+            setImagem(docSnap.data().img ?? "")
 
         }
 
@@ -66,22 +66,17 @@ export default function Config({ isEditting }) {
             valorOriginal: Number(valorOriginal),
             valorAtual: Number(valorAtual),
             descricoes: descricoes,
-            imagem: imagem,
+            img: imagem,
         }
-        if(isEditting){
-        updateDoc(refDoc, updateDocData)
+        if (isEditting) {
+            updateDoc(refDoc, updateDocData)
         }
-        else{
+        else {
             setDoc(refDoc, updateDocData)
 
         }
     }
-
-
-
-
-
-
+    
     return (
 
 
@@ -123,8 +118,6 @@ export default function Config({ isEditting }) {
 
             }}>
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Nome" variant="filled" value={nome} onChange={(e) => { setNome(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
-                <Button sx={{ color: 'white' }} ><AddCircleIcon /></Button>
             </div>
             <div style={{
                 width: '100%',
@@ -136,8 +129,6 @@ export default function Config({ isEditting }) {
 
             }} >
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Valor Original" variant="filled" value={valorOriginal} onChange={(e) => { setValorOriginal(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
-                <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
             </div>
 
             <div style={{
@@ -149,8 +140,6 @@ export default function Config({ isEditting }) {
                 justifyContent: 'center'
             }}>
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Valor Atual" variant="filled" value={valorAtual} onChange={(e) => { setValorAtual(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
-                <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
             </div>
             <div style={{
                 width: '100%',
@@ -163,7 +152,7 @@ export default function Config({ isEditting }) {
                 {
                     descricoes.map((descricao, i) => (
                         <div style={{
-                            width: "100%",
+                            width: "calc(100% - 170px)",
                             gap: '5px',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -175,12 +164,14 @@ export default function Config({ isEditting }) {
                                 listaTemp[i] = e.target.value;
                                 setDescricoes([...listaTemp]);
                             }} />
-                            <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
-                            <Button sx={{ color: 'white' }}><AddCircleIcon /></Button>
+                            <Button sx={{ color: 'white' }} onClick={() => {
+                                setDescricoes(descricoes.filter((_, index) => index !== i))
+                            }}><DeleteIcon /></Button>
                         </div>
                     ))
                 }
 
+                            <Button onClick={() => setDescricoes([...descricoes, ""])} sx={{ color: 'white' }}><AddCircleIcon /></Button>
             </div>
             <div style={{
                 width: '100%',
@@ -191,8 +182,6 @@ export default function Config({ isEditting }) {
                 justifyContent: 'center'
             }}>
                 <TextField sx={{ backgroundColor: '#ccc', width: '40%' }} label="Imagem" variant="filled" value={imagem} onChange={(e) => { setImagem(e.target.value) }} />
-                <Button sx={{ color: 'white' }}><DeleteIcon /></Button>
-                <Button sx={{ color: 'white' }}><AddAPhotoIcon /></Button>
             </div>
             <div style={{
                 display: 'flex',
@@ -220,6 +209,7 @@ export default function Config({ isEditting }) {
 
 
                 }}>Voltar</Button> </a>
+                
                 <a style={{
 
                     display: 'flex',
