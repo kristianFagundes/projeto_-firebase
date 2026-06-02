@@ -4,12 +4,22 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import "@fontsource/saira";
 import "@fontsource/saira-stencil-one";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "./firebase";
 
 
 
-export default function PlanCard({ p }) {
+export default function PlanCard({ p, onRemove }) {
 
     const [mouseHover, setMouseHover] = useState(false)
+
+    //  cria uma função que é chamada no onClick
+    const deleteData = () => {
+        // deleteDoc é uma função do firebase, (doc(db, "itens", p.id)) localiza o documento  na coleção do banco de dados do firebase, com o ID do plancard
+        deleteDoc(doc(db, "itens", p.id));
+        
+        onRemove()
+    }
 
     return (
 
@@ -39,7 +49,7 @@ export default function PlanCard({ p }) {
 
                 <a href={"/Config/" + p.id} style={{ width: '100%', height: ' 100%' }}><button style={{ marginLeft: '8px', width: '30%', height: ' 15%', backgroundColor: 'rgba(140, 23, 194, 0.69)' }}><EditRoundedIcon style={{ color: 'white' }} /></button></a>
 
-                <button style={{ width: '50%', height: ' 15%', color: 'white', backgroundColor: 'rgba(140, 23, 194, 0.83)' }}>Assinar</button>
+                <button style={{ width: '50%', height: ' 15%', color: 'white', backgroundColor: 'rgba(140, 23, 194, 0.83)' }}  onClick={deleteData}>Remover</button>
 
 
 
