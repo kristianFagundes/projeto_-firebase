@@ -1,10 +1,11 @@
 
 import { useState, useEffect } from "react"
 import { collection, query, getDocs } from 'firebase/firestore';
-import { db } from './firebase';
+import { db, auth } from './firebase';
+import { signOut } from "firebase/auth";
 import PlanCard from "./PlanCard";
-import Button from "@mui/material/Button";
 import { useAuth } from "./AuthContext";
+import Login from "./views/Login";
 
 
 export default function Tela() {
@@ -12,6 +13,15 @@ export default function Tela() {
     const { user, loading } = useAuth();
     const isAdmin = user?.uid === "0HZE9nYKvCVlknKTRxAuKPioumW2";
     // identifica o admin através do UID gerado no firebase quando criei um usuario para autenticar
+    const [loginOpen, setLoginOpen] = useState(false);
+    // Essa variável terá duas funções:
+    //- loginOpen: informa se a sidebar está aberta (true) ou fechada (false).
+    //- setLoginOpen: altera esse estado.
+
+    async function handleLogout() {
+        await signOut(auth);
+        //Quando signOut(auth) terminar, o onAuthStateChanged, que já temos no AuthContext, perceberá que não existe mais usuário conectado e atualizará o estado.
+    }
 
     const descricao1 = 'Área de Musculação';
     const descricao2 = 'Cadeira de Massagem';
@@ -114,31 +124,105 @@ export default function Tela() {
 
 
                     }}>
+                        {!loading && (
+                            isAdmin ? (
+                                <>
+                                    <li style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5em',
+                                        color: 'rgb(140, 23, 194)',
+                                        fontSize: '0.85em',
+
+                                    }}>
+                                        <span style={{
+                                            width: '9px',
+                                            height: '9px',
+                                            borderRadius: '50%',
+                                            backgroundColor: '#2e9d50',
+                                            boxShadow: '0 0 5px rgba(46, 157, 80, 0.5)'
+                                        }} />
+                                        Admin conectado
+                                    </li>
+                                    <li>
+                                        <a href="/insert">
+                                            <button style={{
+                                                backgroundColor: 'rgb(140, 23, 194)',
+                                                boxShadow: '1px 2px 1px rgb(183, 160, 194)',
+                                                borderRadius: '30% 10%',
+                                                color: 'white',
+                                                width: '6em',
+                                                height: '4em',
+                                                fontSize: '1em'
+                                            }}>
+                                                Adicionar
+                                            </button>
+                                        </a>
+                                    </li>
+
+
+                                </>
+                            ) : (
+                                <li>
+
+                                    <button
+                                        onClick={() => setLoginOpen(true)}
+                                        // setLoginOpen já inicia como false (fechado), quando o usuario clica no botão login essa variavel se torna true (aberto) e mostra o sidebar de login
+                                        style={{
+                                            backgroundColor: 'rgb(140, 23, 194)',
+                                            boxShadow: '1px 2px 1px rgb(183, 160, 194)',
+                                            borderRadius: '30% 10%',
+                                            color: 'white',
+                                            width: '6em',
+                                            height: '4em',
+                                            fontSize: '1em'
+                                        }}>
+                                        Login
+                                    </button>
+
+                                </li>
+                            )
+                        )}
 
 
                         <li><button style={{
                             backgroundColor: ' rgb(140, 23, 194)',
 
-                            boxShadow: '1px 2px 1px rgb(183, 160, 194)',
-                            borderRadius: '30% 10%', color: 'white', width: '6em', height: '4em', fontSize: '1em'
-                        }}>Home</button></li>
-                        <li><button style={{
-                            backgroundColor: ' rgb(140, 23, 194)',
-                            
                             boxShadow: '1px 2px 1px rgb(183, 160, 194)',
                             borderRadius: '30% 10%', color: 'white', width: '6em', height: '4em', fontSize: '1em'
                         }}>Contato</button></li>
-                        <li><button style={{
-                            backgroundColor: ' rgb(140, 23, 194)',
 
-                            boxShadow: '1px 2px 1px rgb(183, 160, 194)',
-                            borderRadius: '30% 10%', color: 'white', width: '6em', height: '4em', fontSize: '1em'
-                        }}>Login</button></li>
+                        {!loading && isAdmin && (
+                            <li>
+                                <button
+                                    onClick={handleLogout}
+                                    //Quando o usuário clicar no botão, o React executará a função handleLogout, que criamos anteriormente.
+                                    style={{
+                                        backgroundColor: 'transparent',
+                                        border: '1px solid rgb(140, 23, 194)',
+                                        color: 'rgb(140, 23, 194)',
+                                        borderRadius: '8px',
+                                        padding: '0.5em 1em',
+                                        fontSize: '0.85em',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Sair
+                                </button>
+                            </li>
+                        )}
+
 
                     </ul>
                 </nav>
 
             </header>
+            <Login
+                open={loginOpen}
+                onClose={() => setLoginOpen(false)}
+            />
+
+
             <main style={{
 
                 backgroundColor: ' rgb(183, 160, 194)',
@@ -149,36 +233,10 @@ export default function Tela() {
 
 
             }}>
-                {loading ? (
-                    <p>Verificando autenticação...</p>
-                ) : (
-                    <p>
-                        {user ? "Usuário autenticado" : "Nenhum usuário conectado"}
-                    </p>
-                )}
-
-                <a href={"/insert"} style={{
-
-                    display: 'flex',
-                    justifyContent: 'center',
-                    width: '7%',
-                    textDecoration: 'none',
-                    paddingLeft: '13rem'
-                }}> <Button sx={{
 
 
-                    color: 'rgb(140, 23, 194)',
-                    backgroundColor: ' rgb(219, 152, 241)',
-                    boxShadow: '3px 3px 7px rgb(54, 54, 54)',
-                    borderRadius: '30% 10%',
-                    width: '6em',
-                    height: '4em',
-                    fontSize: '1em',
-                    textTransform: 'uppercase',
-                    fontFamily: "Saira Stencil One",
 
 
-                }}>Adicionar</Button> </a>
                 <div style={{
 
 
@@ -196,7 +254,7 @@ export default function Tela() {
                     {
                         planos.map((p) => {
                             return (
-                                <PlanCard p={p} onRemove={onRemove} />
+                               <PlanCard p={p} onRemove={onRemove} isAdmin={isAdmin} />
                             )
                         }
 
