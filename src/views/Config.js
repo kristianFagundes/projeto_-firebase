@@ -2,13 +2,12 @@ import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
+
 import "@fontsource/saira-stencil-one";
 import { BrowserRouter, Route, Routes, useParams } from 'react-router';
 import { useState, useEffect } from "react"
 import React from 'react';
-import { updateDoc, doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs, docRef, getDoc, setDoc } from 'firebase/firestore';
+import { updateDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 
@@ -29,8 +28,9 @@ export default function Config({ isEditting }) {
     useEffect(() => {
         //  função assincrona não espera carregar para o codigo cotinuar a ser executado
         const fetchDoc = async () => {
-
+            // armazena uma referência (endereço) para localizar um documento no Firestore.
             const docRef = doc(db, "itens", id)
+            //armazena o resultado da consulta, incluindo os dados encontrados e informações sobre a existência do documento.
             const docSnap = await getDoc(docRef);
             console.log(docSnap.data())
             setNome(docSnap.data().nome)
@@ -71,10 +71,12 @@ export default function Config({ isEditting }) {
         if (isEditting) {
             updateDoc(refDoc, updateDocData)
         }
+        //updateDoc: atualiza os campos de um documento existente.
         else {
             setDoc(refDoc, updateDocData)
-
         }
+        //setDoc: cria um documento ou substitui seu conteúdo caso ele já exista.
+        
     }
     
     return (

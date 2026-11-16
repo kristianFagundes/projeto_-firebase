@@ -1,17 +1,17 @@
 
 import { useState, useEffect } from "react"
-import React from 'react';
-import { doc, deleteDoc, collection, addDoc, onSnapshot, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import PlanCard from "./PlanCard";
 import Button from "@mui/material/Button";
-
-
-
-
+import { useAuth } from "./AuthContext";
 
 
 export default function Tela() {
+
+    const { user, loading } = useAuth();
+    const isAdmin = user?.uid === "0HZE9nYKvCVlknKTRxAuKPioumW2";
+    // identifica o admin através do UID gerado no firebase quando criei um usuario para autenticar
 
     const descricao1 = 'Área de Musculação';
     const descricao2 = 'Cadeira de Massagem';
@@ -19,7 +19,9 @@ export default function Tela() {
     const descricao4 = 'Pagamento anual parcelado em até 12x no cartão';
 
     const [planos, setPlanos] = useState([])
-
+    // planos guarda a lista de planos. 
+    // setPlanos atualiza essa lista.
+    // Quando setPlanos é executado, o React atualiza a interface.
     const planosTemp = [
         {
             img: 'https://s2-oglobo.glbimg.com/tCi4YPIy6K0HBPMLGnt00WSvbrQ=/0x0:4000x2667/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_da025474c0c44edd99332dddb09cabe8/internal_photos/bs/2023/c/a/O7y1EGRAelLLVURwHeqQ/strong-man-training-gym.jpg',
@@ -49,16 +51,16 @@ export default function Tela() {
         },
     ];
 
- async function fetchData() {
-            const q = query(collection(db, "itens"))
-            const qSnap = await getDocs(q)
-            let listaTemporaria = []
-            qSnap.docs.map(doc => listaTemporaria.push({...doc.data(), "id": doc.id}))
-            
-            setPlanos(listaTemporaria)
-            
-            console.log(listaTemporaria)
-        }
+    async function fetchData() {
+        const q = query(collection(db, "itens"))
+        const qSnap = await getDocs(q)
+        let listaTemporaria = []
+        qSnap.docs.map(doc => listaTemporaria.push({ ...doc.data(), "id": doc.id }))
+
+        setPlanos(listaTemporaria)
+
+        console.log(listaTemporaria)
+    }
 
 
     useEffect(() => {
@@ -68,6 +70,7 @@ export default function Tela() {
     const onRemove = () => {
         fetchData();
     }
+    //Depois de uma exclusão, o componente consulta novamente o Firestore para atualizar a listagem.
 
     return (
 
@@ -121,23 +124,23 @@ export default function Tela() {
                         }}>Home</button></li>
                         <li><button style={{
                             backgroundColor: ' rgb(140, 23, 194)',
-
+                            
                             boxShadow: '1px 2px 1px rgb(183, 160, 194)',
                             borderRadius: '30% 10%', color: 'white', width: '6em', height: '4em', fontSize: '1em'
-                        }}>Planos</button></li>
+                        }}>Contato</button></li>
                         <li><button style={{
                             backgroundColor: ' rgb(140, 23, 194)',
 
                             boxShadow: '1px 2px 1px rgb(183, 160, 194)',
                             borderRadius: '30% 10%', color: 'white', width: '6em', height: '4em', fontSize: '1em'
-                        }}>Contato</button></li>
+                        }}>Login</button></li>
 
                     </ul>
                 </nav>
 
             </header>
             <main style={{
-                
+
                 backgroundColor: ' rgb(183, 160, 194)',
                 backgroundSize: 'cover',
                 width: '100%',
@@ -146,7 +149,15 @@ export default function Tela() {
 
 
             }}>
-<a href={"/insert"} style={{
+                {loading ? (
+                    <p>Verificando autenticação...</p>
+                ) : (
+                    <p>
+                        {user ? "Usuário autenticado" : "Nenhum usuário conectado"}
+                    </p>
+                )}
+
+                <a href={"/insert"} style={{
 
                     display: 'flex',
                     justifyContent: 'center',
@@ -183,7 +194,8 @@ export default function Tela() {
 
                 >
                     {
-                        planos.map((p) => {return (
+                        planos.map((p) => {
+                            return (
                                 <PlanCard p={p} onRemove={onRemove} />
                             )
                         }
